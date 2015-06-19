@@ -1,0 +1,6 @@
+version: "Apple Swift version 1.2 (swiftlang-602.0.53.1 clang-602.0.53)"
+options: "6127b69a592216350b09af968fcbd85d"
+inputs: 
+- "/Users/neovada/Documents/ProgrammingLearning/MyTests/iOS/SWIFT/testFlickrApp/testFlickrApp/Photo.swift"
+- "/Users/neovada/Documents/ProgrammingLearning/MyTests/iOS/SWIFT/testFlickrApp/testFlickrApp/ViewController.swift"
+- "/Users/neovada/Documents/ProgrammingLearning/MyTests/iOS/SWIFT/testFlickrApp/testFlickrApp/AppDelegate.swift"

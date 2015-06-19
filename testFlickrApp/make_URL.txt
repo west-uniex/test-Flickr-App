@@ -1,0 +1,25 @@
+<photo 
+	id        = "18846470106" 
+	owner     = "28501039@N03" 
+	secret    = "bc79d94486" 
+	server    = "5569" 
+	farm      = "6" 
+	title     = "lilac Fairy" 
+	ispublic  = "1" 
+	isfriend  = "0" 
+	isfamily  = "0" 
+/>
+
+https://farm6.staticflickr.com/5569/18846470106_bc79d94486_o.jpg
+
+https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+
+EXAMPLE:
+
+https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg
+
+farm-id: 1
+server-id: 2
+photo-id: 1418878
+secret: 1e92283336
+size: m
