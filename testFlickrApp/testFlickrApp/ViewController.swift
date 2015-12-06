@@ -63,7 +63,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
         
         
         
-        var viewFrame : CGRect = self.view.frame
+        let viewFrame : CGRect = self.view.frame
         self.loadingView = UIView.init(frame: viewFrame)
         self.loadingView.backgroundColor = UIColor.blackColor()
         self.loadingView.alpha = 0.1
@@ -148,36 +148,33 @@ class ViewController: UIViewController, NSURLSessionDelegate
                                                     completionHandler:
                                                     {
                                                         (
-                                                            response: NSURLResponse!,
-                                                                data: NSData!,
-                                                                error: NSError!
+                                                            response: NSURLResponse?,
+                                                                data: NSData?,
+                                                                error: NSError?
                                                         ) in
                                                     
-                                                        if data.length > 0 && error == nil
+                                                        if data != 0 && error == nil
                                                         {
-                                                            let responceString = NSString(
-                                                                                            data    : data,
-                                                                                            encoding: NSUTF8StringEncoding
-                                                                                         );
-                                                            println("responceString = \(responceString)")
-                                                            //self.beginParsing(data)
-                                                            
-                                                            self.listPhotoDesc = self.makeParsingResponceFromServerString(responceString!);
-                                                            
-                                                            let fistPhoto = self.listPhotoDesc.first
-                                                            
-                                                            self.urlOfDownloadedImage = self.createURL_FromPhotoDesc (fistPhoto!)
-                                                            
-                                                            self.downloadImageByURL(self.urlOfDownloadedImage);
-                                                            
-                                                        }
-                                                        else if data.length == 0 && error == nil
-                                                        {
-                                                            println("Nothing was downloaded")
+                                                            if data!.length > 0
+                                                            {
+                                                                let responceString = NSString(
+                                                                                                data    : data!,
+                                                                                                encoding: NSUTF8StringEncoding
+                                                                                            );
+                                                                    print("responceString = \(responceString)")
+                                                                self.listPhotoDesc = self.makeParsingResponceFromServerString(responceString!);
+                                                                let fistPhoto = self.listPhotoDesc.first
+                                                                self.urlOfDownloadedImage = self.createURL_FromPhotoDesc (fistPhoto!)
+                                                                self.downloadImageByURL(self.urlOfDownloadedImage);
+                                                            }
+                                                            else if data?.length == 0
+                                                            {
+                                                                print("Nothing was downloaded")
+                                                            }
                                                         }
                                                         else if error != nil
                                                         {
-                                                            println("Error happened = \(error)")
+                                                            print("Error happened = \(error)")
                                                         }
                                                     }
                                                 );
@@ -196,13 +193,13 @@ class ViewController: UIViewController, NSURLSessionDelegate
         var resultsArray = [NSArray]()
         var listPhoto    = [Photo] ()
         
-        var result     = NSArray.alloc()
-        let separator  = NSCharacterSet.whitespaceCharacterSet();
+        var result     = NSArray()
+        let separator  = NSCharacterSet.whitespaceCharacterSet()
 
         //
         var localResponceFromServerString = responceFromServerString.copy() as! NSString
         
-        do
+        repeat
         {
             // cut off  each
             
@@ -221,14 +218,14 @@ class ViewController: UIViewController, NSURLSessionDelegate
             
             let rangeCutting = NSMakeRange( 0 , rangeEndTag.location + 3)
             let photoString  = localResponceFromServerString.substringWithRange(rangeCutting) as NSString
-            println("photoString: \(photoString)\n")
+            print("photoString: \(photoString)\n")
             
             //
             result = photoString.componentsSeparatedByCharactersInSet( separator) as NSArray;
-            println("result: \(photoString)\n")
+            print("result: \(photoString)\n")
             
             var propertyString: NSString = ""
-            var thePhotoClass : Photo    = Photo.init()
+            let thePhotoClass : Photo    = Photo.init()
             
             if result.count != 11
             {
@@ -241,7 +238,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
             {
                 // ...
                 propertyString = result [i] as! NSString
-                println("propertyString: \(propertyString)\n")
+                print("propertyString: \(propertyString)\n")
                 
                 //TODO: CHECK THEN ARRAY DO NOT CREATING CORREECT
                 //for character in propertyString
@@ -256,7 +253,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("id").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let idValue :String = separatingArray[2] as! String
+                    let idValue :String = separatingArray[2] 
                     
                     thePhotoClass.id = idValue
                     //pause()
@@ -265,7 +262,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("owner").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let ownerValue :String = separatingArray[2] as! String
+                    let ownerValue :String = separatingArray[2] 
                     
                     thePhotoClass.owner = ownerValue
                     sleep(0);
@@ -274,7 +271,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("secret").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let secretValue :String = separatingArray[2] as! String
+                    let secretValue :String = separatingArray[2] 
                     
                     thePhotoClass.secret = secretValue
                     
@@ -284,7 +281,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("server").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let serverValue :String = separatingArray[2] as! String
+                    let serverValue :String = separatingArray[2] 
                     
                     thePhotoClass.server = serverValue
                     
@@ -294,7 +291,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("farm").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let farmValue :String = separatingArray[2] as! String
+                    let farmValue :String = separatingArray[2] 
                     
                     thePhotoClass.farm = farmValue
                     
@@ -306,7 +303,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 {
                     //let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
                     //let titleValue :String = separatingArray[2] as! String
-                    var titleValue :String = propertyString.substringFromIndex(rangeOfTitle.length)
+                    let titleValue :String = propertyString.substringFromIndex(rangeOfTitle.length)
                     //titleValue = titleValue.substringToIndex(count(titleValue) - 2 )
 
                     thePhotoClass.title = titleValue
@@ -317,9 +314,9 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("ispublic").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let isPublicValue :String = separatingArray[2] as! String
+                    let isPublicValue :String = separatingArray[2] 
                     
-                    if isPublicValue.toInt() == 1
+                    if Int(isPublicValue) == 1
                     {
                         thePhotoClass.isPublic = true
                     }
@@ -334,9 +331,9 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("isfriend=").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let isFriendValue :String = separatingArray[2] as! String
+                    let isFriendValue :String = separatingArray[2] 
                     
-                    if isFriendValue.toInt() == 1
+                    if Int(isFriendValue) == 1
                     {
                         thePhotoClass.isFriend = true
                     }
@@ -352,9 +349,9 @@ class ViewController: UIViewController, NSURLSessionDelegate
                 if propertyString.rangeOfString("isfamily=").location != NSNotFound
                 {
                     let separatingArray  = propertyString.componentsSeparatedByCharactersInSet(NSCharacterSet (charactersInString: "=\""))
-                    let isFamilyValue :String = separatingArray[2] as! String
+                    let isFamilyValue :String = separatingArray[2] 
                     
-                    if isFamilyValue.toInt() == 1
+                    if Int(isFamilyValue) == 1
                     {
                         thePhotoClass.isFamily = true
                     }
@@ -377,7 +374,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
         
         //println("take resultsArray: \(resultsArray)\n")
         
-        println("take listPhoto: \(listPhoto)\n")
+        print("take listPhoto: \(listPhoto)\n")
         //return resultsArray;
         return listPhoto
     }
@@ -401,8 +398,8 @@ class ViewController: UIViewController, NSURLSessionDelegate
         //secret: 1e92283336
         //size: m
         
-        var urlString: String  = "https://farm\(photoDesc.farm).staticflickr.com/\(photoDesc.server)/\(photoDesc.id)_\(photoDesc.secret).jpg"
-        println("urlString: \(urlString) \n")
+        let urlString: String  = "https://farm\(photoDesc.farm).staticflickr.com/\(photoDesc.server)/\(photoDesc.id)_\(photoDesc.secret).jpg"
+        print("urlString: \(urlString) \n")
         
         let url = NSURL(string: urlString)
         
@@ -421,13 +418,13 @@ class ViewController: UIViewController, NSURLSessionDelegate
                                             completionHandler:
                                             {
                                                 [weak self] (
-                                                                dataFrom: NSData!,
-                                                                response: NSURLResponse!,
-                                                                error   : NSError!
+                                                                dataFrom: NSData?,
+                                                                response: NSURLResponse?,
+                                                                error   : NSError?
                                                             ) in
         
                                                 /* We got our data here */
-                                                println("Done")
+                                                print("Done")
         
                                                 //self!.session.finishTasksAndInvalidate()
                                                 
@@ -435,7 +432,8 @@ class ViewController: UIViewController, NSURLSessionDelegate
                                                 
                                                 self?.loadingView.alpha = 0
                                                 
-                                                let imagePhoto = UIImage.init( data: dataFrom)
+                                                
+                                                let imagePhoto = UIImage.init( data: dataFrom!)
                                                 
                                                 dispatch_async(
                                                                 dispatch_get_main_queue(),
@@ -467,7 +465,7 @@ class ViewController: UIViewController, NSURLSessionDelegate
     //MARK:
     //MARK: -  CONFORMS NSURLSessionDelegate
     
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
     
@@ -529,8 +527,8 @@ class ViewController: UIViewController, NSURLSessionDelegate
         //var randomNumber = arc4random()
         //randomNumber =  randomNumber%randomNumber
         
-        var k: Int = random() % size;
-         println("random index: \(k)\n")
+        let k: Int = random() % size;
+         print("random index: \(k)\n")
         
         let randomPhoto = self.listPhotoDesc[k]
         
